@@ -1,0 +1,352 @@
+Priority,CDKey,ObjectUse,ProcessName,BaseURL,APIHandler,APIVersion,APIEndPoint,SourceSystem,SJE Status,Status (Incremental Load),Owner (Incremental Load),ETA,Status (Historical Load),Owner (Historical Load),Query Built?,Data Extracted,CSV Splitted,API Validation Status,SFTP Status,SFTP Delivery ID,Select query,Execution Environment,Initial Nayo ETA,Review CROWE ETA,Final Delivery ETA,View Name,Row Count,ETA Execution,LU Name,Comments,Latest Comment,Column25
+1,21,ChartofAccounts,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,AccountsHandling.svc,v1,AccountSet,IFS,Ready for Testing,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,Not Required,,,,,ACCOUNT,,,Account,,,
+1,35,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ActivityListHandling.svc,v1,Activities,IFS,In Progress,Completed in Internal Test,Shanka,,Not Required,,Y,Y,Completed,Under CROWE Review,Under Review,,"select t.*,
+       Project_API.Get_Company(Project_ID) Company,
+       Activity_API.Get_Activity_Date_Exception(ACTIVITY_SEQ) EmployeeAllocationDateException,
+       Activity_History_API.Activity_History_Log_Exist(ACTIVITY_SEQ) ActivityHistoryLogExist,
+       Project_API.Get_Access_On_Off(Project_Id) AccessOn,
+       Project_API.Get_Manager(Project_ID) Manager              
+from ACTIVITY_SUM_DETAIL t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,ACTIVITY_SUM_DETAIL,,,Activity,,,
+1,58,Activities,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectScopeAndScheduleHandling.svc,v1,Activities,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Under CROWE review,Not Started,,,,06/18/24,06/19/24,,,,,,,Sahan Dharmasiri - completed,
+2,28,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ActivityEstimateHandling.svc,v1,ActivityEstimates,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,activity_estimate_main,,,ActivityEstimate,,,
+1,58,Activities,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectScopeAndScheduleHandling.svc,v1,ActivityTasks,IFS,,Completed in Internal Test,Shanka,2023-06-06,Not Required,,,N,,,,,,,,,,,,,,,,
+1,14,Department,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CodePartValuesHandling.svc,v1,CompanyFinanceSet,IFS,,Completed in Internal Test,Shanka,,Check with Crowe,,,N,,,,,"select t.* 
+from COMPANY_FINANCE t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,COMPANY_FINANCE,,,CompanyFinance,,,
+1,16,Division,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,OrganizationUnitsHandling.svc,v1,CompanyOrgAlls,IFS,,OBJVERSION is not a date,Shanka,,Removed,,,,,,,,,,,,,,,,CompanyOrg,,,
+1,17,Division,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CompanyDetailsHandling.svc,v1,CompanyWorkLocations,IFS,,Completed in Internal Test,Shanka,,Removed,,,N,,,,,,,,,,,,,CompanyWorkLocation,,,
+1,15,Inventory,IFS_BronzeAPI,main/ifsapplications/projection,CountResultsHandling.svc,v1,CountingResults,IFS,,Completed in Internal Test,Shanka,2024-05-23,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.* from COUNTING_RESULT t where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20181231', 'YYYYMMDD');",,06/17/24,06/18/24,,COUNTING_RESULT,,,,,Kalyan - SFTP completed,
+2,31,Customer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerStatisticGroupsHandling.svc,v1,CustomerGroups,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,Not Required,,,,,,,,CustomerGroup,,,
+1,13,Customer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomersHandling.svc,v1,CustomerInfoSet,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,Not Required,,,,,,,,CustomerInfo,,,
+1,3,SalesInvoices,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerOrderInvoiceLinesHandling.svc,v1,CustomerOrderInvItemSet,IFS,,Completed in Internal Test,Shanka,2024-05-30,Ready to Start,,Y,N,Not Available,Under CROWE review,Not Started,,,,06/20/24,06/21/24,,customer_order_inv_join,1314428,,CustomerOrderInvItem,,Sahan Dharmasiri - no row selected,
+1,2,CustomerOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerOrderLinesHandling.svc,v1,CustomerOrderJoinSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Under CROWE review,Not Started,,"select t.*,
+       DECODE(Sales_Part_API.Get_Configurable_Db(CONTRACT, CATALOG_NO),'CONFIGURED','TRUE', 'FALSE') Configurable,
+       Customer_Order_Line_API.Get_Interim_Order_No(order_no, line_no, rel_no, line_item_no, ctp_planned_db) InterimOrder,
+       Inventory_Part_API.Get_Site_Converted_Qty(supply_site, part_no, Co_Supply_Site_Reservation_API.Get_Qty_Reserved(order_no, line_no, rel_no, line_item_no), contract, 'ADD') SupplySiteReservedQty,
+       Input_Unit_Meas_Group_API.Is_Usage_Allowed(Inventory_Part_API.Get_Input_Unit_Meas_Group_Id(contract, Sales_Part_API.Get_Part_No(contract, catalog_no)), 'ORDER') InputUomGroup,
+       Sales_Price_List_API.Get_Description(price_list_no) PriceListDescription,
+       Customer_Order_Line_API.Get_Owner_For_Part_Ownership(order_no, line_no, rel_no, line_item_no, part_ownership_db) Owner,
+       Reserve_Customer_Order_API.Get_Available_Qty(NVL(supply_site, contract), NVL(NVL(supply_site_part_no, part_no), catalog_no), configuration_id, order_no, line_no, rel_no, line_item_no, supply_code_db, part_ownership_db, owning_customer_no, project_id, condition_code, null, 'TRUE') AvailableQty,
+       DECODE(catalog_type_db, 'INV', qty_picked, null) PickedQty,
+       DECODE(catalog_type_db, 'INV', qty_shipped, null) DeliveredQty,
+       part_price + NVL(calc_char_price, 0) TotalCalcSalesPriceCurr,
+       Order_Currency_Rate_Util_API.Get_Fin_Curr_Rate(currency_rate, company, currency_code) CurrencyRate,
+       Customer_Order_Line_API.Get_Base_Sale_Price_Total(order_no, line_no, rel_no, line_item_no) NetAmtBase,
+       Customer_Order_Line_API.Get_Base_Price_Incl_Tax_Total(order_no, line_no, rel_no, line_item_no) GrossAmtBase,
+       Customer_Order_Line_API.Get_Sale_Price_Total(order_no, line_no, rel_no, line_item_no) NetAmountCurr,
+       Customer_Order_Line_API.Get_Sale_Price_Incl_Tax_Total(order_no, line_no, rel_no, line_item_no) GrossAmtCurr,
+       Customer_Order_Line_API.Get_Total_Cost(order_no, line_no, rel_no, line_item_no) TotalCostBase,
+       Rental_Object_API.Get_Planned_Rental_Start_Date(rental_no) PlannedRentalStartDate,
+       Rental_Object_API.Get_Planned_Rental_Start_Time(rental_no) PlannedRentalStartTime,
+       Rental_Object_API.Get_Planned_Rental_Duration(rental_no) PlannedRentalDuration,
+       Rental_Object_API.Get_Rental_Duration_Unit_Me_Db(rental_no) RentalDurationUom,
+       Rental_Object_API.Get_Planned_Rental_End_Date(rental_no) PlannedRentalEndDate,
+       Rental_Object_API.Get_Planned_Rental_End_Time(rental_no) PlannedRentalEndTime,
+       Rental_Object_Manager_API.Calculate_Chargeable_Days(Rental_Object_API.Get_Planned_Rental_Start_Date(rental_no), Rental_Object_API.Get_Planned_Rental_End_Date(rental_no), Rental_Object_API.Get_Chargeable_Id(rental_no), Rental_Object_API.Get_Exception_Id(rental_no), Rental_Period_Rounding_API.Encode(Rental_Object_API.Get_Period_Rounding(rental_no))) ChargeableDays,
+       Rental_Object_API.Get_Planned_Rental_Return_Date(rental_no) PlannedRentalReturnDate,
+       Rental_Object_API.Get_Chargeable_Id(rental_no) ChargeableDaysID,
+       Rental_Object_API.Get_Exception_Id(rental_no) DateExceptionID,
+       Rental_Object_API.Get_Period_Rounding(rental_no) PeriodRounding,
+       Rental_Object_API.Get_Trans_Schedule_Id(rental_no) ScheduleID,
+       Rental_Trans_Schedule_API.Get_Description(Rental_Object_API.Get_Trans_Schedule_Id(rental_no)) ScheduleDescription,
+       Rental_Object_API.Get_Start_Rental_Option_Db(rental_no) StartRentalOption,
+       Statutory_Fee_API.Get_Description(company, tax_code) TaxCodeDescription,
+       Tax_Class_API.Get_Description(company, tax_class_id) TaxClassDescription,
+       Source_Tax_Item_API.Multiple_Tax_Items_Exist(company,'CUSTOMER_ORDER_LINE',order_no,line_no,rel_no,line_item_no, '*') MultipleTaxLines,
+       Customer_Order_Line_API.Get_Total_Tax_Amount_Base(order_no, line_no, rel_no, line_item_no) TaxAmountBase,
+       Customer_Order_Line_API.Get_Total_Tax_Amount_Curr(order_no, line_no, rel_no, line_item_n",,06/21/24,06/24/24,,customer_order_join,,,CustomerOrderLine,Files ready for SFTP,Kalyan - SFTP Completed,
+1,40,CustomerOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerOrderHandling.svc,v1,CustomerOrderSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Not Available,Under CROWE review,Not Started,,"SELECT t.* ,
+       Site_API.Get_Company(Contract) Company,
+       Company_Finance_API.Get_Currency_Code(company) Currency,
+       Company_Tax_Control_API.Get_External_Tax_Cal_Method_Db(company) TaxCalcMethod,
+       Customer_Info_Address_API.Get_Name(customer_no, ship_addr_no) DelAddrName,
+       Customer_Info_Address_API.Get_Name(customer_no, bill_addr_no) BillAddrName,
+       Customer_Tax_Free_Tax_Code_API.Get_Tax_Free_Tax_Code(customer_no, ship_addr_no, company, supply_country_db, '*') TaxFreeTaxCode,
+       Site_Discom_Info_API.Get_Allow_Overrule_Limit_Sa_Db(contract) OverruleLimitSaleToAssort,
+       Customer_Info_API.Get_Name(rebate_customer) RebateCustomerName,
+       Customer_Info_API.Get_Name(customer_no) CustomerName,
+       Customer_Info_API.Get_Name(customer_no_pay) CustomerNoPayName,
+       Contact_Util_API.Get_Cust_Contact_Name(customer_no, bill_addr_no, cust_ref) CustRefName,
+       Contact_Util_API.Get_Cust_Contact_Name(customer_no_pay, customer_no_pay_addr_no, customer_no_pay_ref) CustomerNoPayReferenceName,
+       Sales_Part_Salesman_API.Get_Name(salesman_code) SalesPartSalesmanName,
+       Payment_Term_API.Get_Description(company, pay_term_id) PaymentTermDescription,
+       Shipment_Line_API.Shipment_Connected_Lines_Exist(order_no, 'CUSTOMER_ORDER') ShipmentConnectedLinesExist,
+       Customer_Agreement_API.Get_Description(agreement_id) AgreementDescription,
+       Supplier_Info_API.Get_Name(vendor_no) VendorName,
+       Person_Info_API.Get_Name(main_representative_id) RepresentativeName,
+       Customer_Info_Address_API.Get_Customer_Branch(customer_no, bill_addr_no) CustomerBranch,
+       Freight_Zone_API.Get_Description(freight_map_id, zone_id) FreightZoneDescription,
+       Forwarder_Info_API.Get_Name(forward_agent_id) ForwardName,
+       Statutory_Fee_API.Get_Description(company, Customer_Tax_Free_Tax_Code_API.Get_Tax_Free_Tax_Code(customer_no, ship_addr_no, company, supply_country_db, '*')) TaxFreeTaxCodeDescription,
+       Customer_Order_API.Get_Tax_Id_Type(order_no) TaxIdType,
+       Customer_Addr_Tax_Number_API.Get_Tax_Id_Number(customer_no, ship_addr_no, company, 'IN', 'IN', 'GST') CustomerDeliveryTaxIdNumber,
+       Customer_Addr_Tax_Number_API.Get_Tax_Id_Number(customer_no, bill_addr_no, company, 'IN', 'IN', 'GST') CustomerInvoiceTaxIdNumber 
+from customer_order t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD')",Test,06/19/24,06/20/24,,CUSTOMER_ORDER,492615,,CustomerOrder,Files ready for SFTP,,
+1,7,GL,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,GLVoucherRowsAnalysis.svc,v1,GenLedVoucherRows,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Not Available,Under CROWE review,Not Started,,"select t.*,
+       Gen_Led_Voucher_Row_API.Get_Delivery_Type_Description(COMPANY,DELIV_TYPE_ID) DeliveryTypeDescription,
+       DECODE(Function_Group, 'I', Gen_Led_Voucher_Row_API.Check_Posting_Proposal(COMPANY, VOUCHER_TYPE, VOUCHER_NO, ACCOUNTING_YEAR, PARTY_TYPE_ID),
+                                      'J', Gen_Led_Voucher_Row_API.Check_Posting_Proposal(COMPANY, VOUCHER_TYPE, VOUCHER_NO, ACCOUNTING_YEAR, PARTY_TYPE_ID)) CheckPostingProposal
+from GEN_LED_VOUCHER_ROW_UNION_QRY t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD')",Test,06/19/24,06/20/24,,gen_led_voucher_row_union_qry,,2days,GenLedVoucherRow,,Kalyan - Still not complete,
+1,8,Payables,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SupplierInvoicesAnalysis.svc,v1,IncomingInvoiceSet,IFS,,Completed. Created a quick report.,Shanka,2024-05-30,Ready to Start,,Y,Y,Completed,Under CROWE review,Not Started,,"SELECT t.*,
+       Invoice_Note_API.Check_Note_Exist(company,invoice_id) Notes,
+       Payment_Plan_Auth_API.On_Hold_Installment_Exists(invoice_id, company) OnHoldInstallmentExists,
+       correction_reason_id ||' '|| correction_reason CorrectionReasonRef,
+       Company_Invoice_Info_API.Get_Use_Posting_Proposal(company) UsePostingProposal,
+       Payment_Plan_API.Overdue_Invoices_Exist(company, invoice_id) Overdue       
+FROM incoming_invoice2 t
+where invoice_date between to_date('01-11-2018', 'dd-mm-yyyy') and to_date('31-03-2024', 'dd-mm-yyyy')",,06/21/24,06/24/24,,incoming_invoice2,,,IncomingInvoice,,"Kalyan - Enter service name: SupplierInvoicesAnalysis.svc
+Enter api : IncomingInvoiceSet
+Total REST API Attribute count: 59 
+Total Select Query Column count:133 
+
+
+./csv_output/IncomingInvoiceSet/IncomingInvoiceSet_chunk_0.csv: 
+Matching Attribute count: 58 
+Non-matching Attribute count: 1
+
+
+Non-matching Attributes: ['InvoiceTextRef'] 
+ in ./csv_o…",
+1,23,Inventory,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,InventoryPartInStockHandling.svc,v1,InventoryPartInStockSet,IFS,,Completed in Internal Test,Shanka,,Removed,,,N,,,,,,,,,,,,,InventoryPartInStock,,,
+1,16,Inventory,IFS_BronzeAPI,main/ifsapplications/projection,PlanningDetailsForInventoryPartsHandling.svc,v1,InventoryPartPlanningSet,IFS,,Completed in Internal Test,Shanka,2024-05-23,Ready to Start,,Y,Y,Completed,Completed,Not Started,,,,06/20/24,06/21/24,,INVENTORY_PART_PLANNING,133443,,,,Sahan Dharmasiri - completed. the file size is 296GB I can not upload to the shared location.,
+1,18,Inventory,IFS_BronzeAPI,main/ifsapplications/projection,InventoryPartsAvailabilityPlanningAnalysis.svc,v1,InventoryPartsAvailabilityPlanningSet,IFS,,Completed. Created a quick report.,Shanka,2024-05-21,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.* from inv_part_config_project_alt t where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND to_date('20240331', 'YYYYMMDD')",Production,06/17/24,06/18/24,,inv_part_config_project_alt,255496,,,,Sahan Dharmasiri - not return any values,
+1,24,Product,IFS_BronzeAPI,main/ifsapplications/projection,InventoryPartHandling.svc,v1,InventoryPartSet,IFS,,Completed in Internal Test,Shanka,2023-06-06,Ready to Start,,Y,Y,Completed,Under CROWE review,Not Started,,"select t.*,
+Inventory_Part_API.Get_Description(contract, part_no) PartDescriptionInUse,
+Iso_Unit_API.Get_Description(unit_meas) UnitOfMeasureDescription,
+Iso_Unit_API.Get_Description(catch_unit_meas) CatchUnitMeasDescription,
+Input_Unit_Meas_Group_API.Get_Description(input_unit_meas_group_id) InputUnitDescription,
+Commodity_Group_API.Get_Description(prime_commodity) PrimeCommodityGrpDescription,
+Commodity_Group_API.Get_Description(second_commodity) SecondCommodityGrpDescription,
+Safety_Instruction_API.Get_Description(hazard_code) SafetyInstructionDescription,
+Accounting_Group_API.Get_Description(accounting_group) AccountingGroupDescription,
+Inventory_Product_Code_API.Get_Description(part_product_code) ProductCodeDescription,
+Inventory_Product_Family_API.Get_Description(part_product_family) ProductFamilyDescription,
+Inventory_Part_API.Get_Weight_Net(contract,part_no) NetWeight,
+Company_Invent_Info_API.Get_Uom_For_Weight(Site_API.Get_Company(contract)) WeightUom,
+Inventory_Part_API.Get_Volume_Net(contract,part_no) NetVolume,
+Company_Invent_Info_API.Get_Uom_For_Volume(Site_API.Get_Company(contract)) VolumeUom,
+Inventory_Part_In_Stock_API.Get_Inventory_Qty_Onhand(contract,part_no,null) OnHandQty,
+Inventory_Part_In_Stock_API.Get_Inventory_Qty_Onhand(contract,part_no,null,'CATCH') OnHandCatchQty,
+Inventory_Part_API.Get_Ultd_Purch_Supply_Date(contract, part_no) UnlimitedPurchSupplyDate,
+Inventory_Part_API.Get_Ultd_Manuf_Supply_Date(contract, part_no) UnlimitedManufSupplyDate,
+Inventory_Part_API.Get_Ultd_Expected_Supply_Date(contract, part_no) UnlimitedExpectedSupplyDate,
+Inventory_Part_API.Get_Superseded_By(contract, part_no) SupersededByPart,
+Inventory_Part_Planning_API.Get_Order_Requisition_Db (Contract, Part_No) SupplyTypeDb,
+Supply_Source_Part_Manager_API.Is_Part_Internally_Sourced(contract, part_no) MultiSitePlannedPart,
+Part_Catalog_API.Get_Description(part_no) PartCatalogPartDescription,
+Part_Gtin_API.Get_Default_Gtin_No(part_no) GTin,
+Part_Gtin_API.Get_Gtin_Series(part_no, Part_Gtin_API.Get_Default_Gtin_No(part_no)) GTINSeries,
+Inventory_Part_API.Get_Putaway_Zone_Refill_Option(contract,part_no) OperativeValue,
+Inventory_Part_API.Get_Putaway_Refill_Option_Src(contract, part_no) OperativeValueSource,
+Company_Site_API.Get_Country_Db(contract) CountryCode,
+Site_Invent_Info_API.Get_Use_Partca_Desc_Invent_Db(contract) UsePartcaDescInventDb,
+Site_Invent_Info_API.Get_Default_Qty_Calc_Round(contract) DefaultQtyCalcRound,
+Part_Catalog_API.Get_Std_Name_Id(PART_NO) || ' - ' || Standard_Names_Language_API.Get_Std_Name(NULL,Part_Catalog_API.Get_Std_Name_Id(PART_NO)) PartCatalogStandardName,
+Forecast_Part_Util_API.Check_Any_Forecast_Part_Exist(Contract, Part_No) AnyForecastPartExists,
+Forecast_Part_Util_API.Check_All_Forecast_Parts_Exist(Contract, Part_No) AllForecastPartsExist
+from inventory_part t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,06/18/24,06/19/24,,INVENTORY_PART,230108,,,Sanjeev to verify this,,
+1,11,Inventory,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,InventoryTransactionsHistoryHandling.svc,v1,InventoryTransactionsHistorySet,IFS,,Completed in Internal Test,Shanka,,Removed,,,N,,,,,"select t.*, 
+Inventory_Part_API.Get_Enabled_Catch_Unit_Meas(CONTRACT,PART_NO) CatchUoM,
+Inventory_Location_API.Get_Warehouse(contract,location_no) Warehouse,
+Inventory_Location_API.Get_Bay_No(contract,location_no) Bay,
+Inventory_Location_API.Get_Row_No(contract,location_no) RowNo,
+Inventory_Location_API.Get_Tier_No(contract,location_no) Tier,
+Inventory_Location_API.Get_Bin_No(contract,location_no) Bin,
+(COST) *(QUANTITY) InventoryCost,
+(Inventory_Transaction_Cost_API.Get_Sum_Unit_Cost(transaction_id, 'TRUE', 'TRUE') *QUANTITY) TotalCost,
+to_char(Accounting_Period_API.Get_Accounting_Year(Site_API.Get_Company(contract), date_applied)) AccountingYearStr,
+Accounting_Period_API.Get_Year_Period_Str(Site_API.Get_Company(contract), date_applied) AccountingPeriodStr,
+DECODE(OWNING_CUSTOMER_NO,NULL,OWNING_VENDOR_NO,OWNING_CUSTOMER_NO) Owner,
+DECODE(OWNING_CUSTOMER_NO,NULL,SUPPLIER_API.Get_Vendor_Name(OWNING_VENDOR_NO), Cust_Ord_Customer_API.Get_Name(OWNING_CUSTOMER_NO)) OwnerName,
+DECODE(PREVIOUS_OWNING_CUSTOMER_NO,NULL,PREVIOUS_OWNING_VENDOR_NO,PREVIOUS_OWNING_CUSTOMER_NO) PreviousOwner,
+DECODE(PREVIOUS_OWNING_CUSTOMER_NO,NULL,SUPPLIER_API.Get_Vendor_Name(PREVIOUS_OWNING_VENDOR_NO), Cust_Ord_Customer_API.Get_Name(PREVIOUS_OWNING_CUSTOMER_NO)) PreviousOwnerName,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Program_Id(ACTIVITY_SEQ)) ProgramId,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Program_Description(ACTIVITY_SEQ)) ProgramDescription,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Project_Name(ACTIVITY_SEQ)) ProjectName,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Sub_Project_Id(ACTIVITY_SEQ)) SubProjectId,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Sub_Project_Description(ACTIVITY_SEQ)) SubProjectDescription,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Activity_No(ACTIVITY_SEQ)) ActivityNo,
+DECODE(ACTIVITY_SEQ, 0, NULL, Activity_API.Get_Description(ACTIVITY_SEQ)) ActivityDescription,
+Handling_Unit_API.Get_Top_Parent_Handl_Unit_Id(HANDLING_UNIT_ID) TopParentHandlingUnitId,
+Handling_Unit_API.Get_Top_Parent_Hu_Type_Id(HANDLING_UNIT_ID) TopParentHandlingUnitTypeId,
+Handling_Unit_API.Get_Top_Parent_Sscc(HANDLING_UNIT_ID) TopParentSscc,
+Handling_Unit_API.Get_Top_Parent_Alt_Hu_Label_Id(HANDLING_UNIT_ID) TopParentAltHandlingUnitLabelId,
+Mpccom_Accounting_API.Error_Posting_Exists_String(ACCOUNTING_ID) HasErroneousPostings,
+Mpccom_Accounting_API.Transferred_Posting_Exists_Str(ACCOUNTING_ID) HasTransferredPostings,
+DECODE(REPORT_EARNED_VALUE_DB, NULL, 'FALSE', 'FALSE', NULL ,'TRUE') ReportEarnedValue,
+Mpccom_Accounting_API.Accounting_Have_Errors_Str(ACCOUNTING_ID) AccountingHasErrors,
+Handling_Unit_API.Get_Handling_Unit_Type_Id(HANDLING_UNIT_ID) HandlingUnitTypeId,
+Manufacturer_Info_API.Get_Country(manufacturer_no) ManufacturerCountry,
+Delivery_Reason_API.Get_Description(Site_API.Get_Company(contract), DELIVERY_REASON_ID) DeliveryReasonDescription,
+Mpccom_Transaction_code_API.Get_Transaction(TRANSACTION_CODE) TransactionCodeDesc,
+Inventory_Part_API.Get_Description(CONTRACT, PART_NO) PartDescription,
+Site_API.Get_Description(CONTRACT) ContractDescription,
+Condition_Code_API.Get_Description(CONDITION_CODE) ConditionCodeDesc,
+Inventory_Part_API.Get_Unit_Meas(CONTRACT, PART_NO) UnitMeas,
+Handling_Unit_Type_API.Get_Description(Handling_Unit_API.Get_Handling_Unit_Type_Id(HANDLING_UNIT_ID)) HandlingUnitTypeDesc,
+Handling_Unit_API.Get_Sscc(HANDLING_UNIT_ID) Sscc,
+Handling_Unit_API.Get_Alt_Handling_Unit_Label_Id(HANDLING_UNIT_ID) AltHandlingUnitLabelId,
+Handling_Unit_Type_API.Get_Description(Handling_Unit_API.Get_Top_Parent_Hu_Type_Id(handling_unit_id)) TopParentHuTypeDesc
+from inventory_transaction_hist2 t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,inventory_transaction_hist2,,,InventoryTransactionHist,INVENTORY_TRANSACTION_HIST2,,
+1,23,Payables,IFS_BronzeAPI,main/ifsapplications/projection,PaymentVoucherLinesAnalysis.svc,v1,LedgerTransactionCustomerSet,IFS,,Removed,Shanka,,Removed,,,,,,,,Not Required,,,,,,,,LedgerTransaction,,,
+1,38,Receivables,IFS_BronzeAPI,main/ifsapplications/projection,SupplierPaymentVoucherLinesAnalysis.svc,v1,LedgerTransactionSupplierSet,IFS,,Removed,Damith,,Removed,,,,,,,,Not Required,,,,,,,,,,,
+3,30,ShopOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,LaborAndOperationHistoryHandling.svc,v1,OperationHistorys,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/28/24,,,OPERATION_HISTORY,8619446,,OperationHistory,,,
+1,9,Receivables,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerInvoicesAnalysis.svc,v1,OutgoingInvoiceSet,IFS,,Completed. Created a quick report.,Shanka,2024-05-30,Ready to Start,,Y,N,Not Available,Under CROWE review,Not Started,,,,06/21/24,06/24/24,,outgoing_invoice_qry,554633,,OutgoingInvoice,,Kalyan - No OBJVERSION field found,
+2,24,PurchaseOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PartCostHandling.svc,v1,PartCostSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/28/24,,,PART_COST,3066096,,PartCost,,Kalyan - API Endpoint corrected after talking to Shanka,
+2,36,Manufacturer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ManufacturerPartNumbersHandling.svc,v1,PartManufacturerPartNoSet,IFS,,Completed in Internal Test,Shanka,,Removed,,N,N,Not Available,Not Started,Not Started,,,,,,,PART_MANU_PART_NO,,,PartManuPartNo,,,
+2,19,Manufacturer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PartManufacturersHandling.svc,v1,PartManufacturers,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.*,
+PART_CATALOG_API.Get_Description(PART_NO) PartDescription,
+Standard_Names_API.Get_Std_Name(PART_CATALOG_API.Get_Std_Name_Id( PART_NO )) StandardName
+from Part_Manufacturer t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,06/28/24,,,PART_MANUFACTURER,,,PartManufacturer,,Sahan Dharmasiri - 27 line completed,
+1,12,Receivables,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerPaymentsAnalysis.svc,v1,PaymentPerCurrencyCuSet,IFS,,Completed. Created a quick report.,Shanka,2024-05-30,Removed,,,N,,,,,,,,,,payment_per_currency_cu_qry,,,PaymentPerCurrency,,,
+1,22,Payables,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SupplierPaymentAnalysis.svc,v1,PaymentPerCurrencySuSet,IFS,,Completed. Created a quick report.,Shanka,2024-05-30,Removed,,,N,,,,,"select t.* from payment_per_currency_su_qry t where pay_date between to_date('01-11-2018', 'dd-mm-yyyy') and to_date('31-03-2024', 'dd-mm-yyyy')",,,,,payment_per_currency_su_qry,,,PaymentPerCurrency,,,
+1,57,Employee,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PeopleFinderManagerHandling.svc,v1,Peoples,IFS,,OBJVERSION is not a date,Shanka,2023-06-06,Not Required,,,N,,,,,,,,,,,,,,,Kalyan - OBJVERSION is not available for view company_person_finder and base view OBJVERSION is not a date,
+2,34,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectGroupsHandling.svc,v1,ProjectGroupSet,IFS,,Completed in Internal Test,Shanka,,Removed,,,N,,,,,Not Required,,,,,,,,ProjectGroup,,,
+1,30,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectScopeAndScheduleHandling.svc,v1,Projects,IFS,,Completed in Internal Test,Shanka,2023-06-06,Ready to Start,,Y,Y,Not Available,Under CROWE review,Not Started,,,,06/20/24,06/21/24,,PROJECT,11050,,,Slow Response,Sahan Dharmasiri - COMPLETED,
+1,5,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectsHandling.svc,v1,Projects,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.* ,
+Project_API.Is_Big_Project(PROJECT_ID) LargeProject,
+Project_History_Log_API.Get_Baseline_Rev_Comment(PROJECT_ID,BASELINE_REVISION_NUMBER) BaselineRevisionComment,
+Project_API.Get_Project_Date_Exception(PROJECT_ID) EmployeeAllocationDateException,
+Planned_Netting_Group_API.Project_Png_Connected(DEFAULT_SITE, PROJECT_ID) ProjectPngExists,
+Project_Forecast_API.Check_Exist_For_Project(PROJECT_ID) CheckForecast,
+Company_Finance_API.Get_Company_Name(Company) CompanyName,
+PROJECT_HISTORY_LOG_API.Check_Exist_For_Project(PROJECT_ID) History
+from project_base t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,06/17/24,06/18/24,,project_base,,,Project,,Kalyan - @damith@nayotech.com  Can you please include Customer_Info_Api.Get_Customer_Category_Db(Customer_Id) customer_category in the query?,
+1,27,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectResourcePlanningHandling.svc,v1,ProjectSet,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,PROJECT,,,Project,,,
+2,1,PurchaseOrderLines,IFS_BronzeAPI,https://<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PurchaseOrderLinesHandling.svc,v1,PurchaseOrderLineSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.*,
+       Purchase_Order_API.Get_Adhoc_Purchased_Db(order_no) AdhocPurchasedDb,
+       Rental_Object_API.Get_Planned_Rental_Start_Date(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PlannedRentalStartDate,
+       Rental_Object_API.Get_Planned_Rental_Start_Time(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PlannedRentalStartTime,
+       Rental_Object_API.Get_Planned_Rental_Duration(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PlannedRentalDuration,
+       Rental_Object_API.Get_Rental_Duration_Unit_Meas(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) RentalDurationUom,
+       Rental_Object_API.Get_Planned_Rental_End_Date(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PlannedRentalEndDate,
+       Rental_Object_API.Get_Planned_Rental_End_Time(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PlannedRentalEndTime,
+       Rental_Object_API.Get_Planned_Rental_Return_Date(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PlannedRentalReturnDate,
+       Pur_Ord_Date_Calculation_API.Get_Latest_Possible_Order_Date(contract, part_no, vendor_no, Purchase_Order_API.Get_Addr_No(order_no), ship_via_code, ext_transport_calendar_id, planned_receipt_date, internal_control_time, route_id, date_entered) LatestOrderDate,
+       Rental_Object_Manager_API.Calculate_Chargeable_Days(Rental_Object_API.Get_Planned_Rental_Start_Date(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')), Rental_Object_API.Get_Planned_Rental_End_Date(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')), Rental_Object_API.Get_Chargeable_Id(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')), Rental_Object_API.Get_Exception_Id(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')), Rental_Period_Rounding_API.Encode(Rental_Object_API.Get_Period_Rounding(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')))) ChargeableDays,
+       Rental_Object_API.Get_Chargeable_Id(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) ChargeableDaysID,
+       Rental_Object_API.Get_Exception_Id(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) DateExceptionID,
+       Rental_Object_API.Get_Period_Rounding(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) PeriodRounding,
+       Rental_Object_API.Get_Trans_Schedule_Id(Rental_Object_API.Get_Rental_No(order_no,line_no,release_no,null,'PUR ORDER')) ScheduleID,
+       DECODE(Document_Text_Api.Note_Id_exist(note_id), 1, 'TRUE', 'FALSE') DocumentText,
+       Purchase_Order_Line_API.Get_Total_In_Order_Curr(order_no,line_no,release_no) NetAmtCurr,
+       Purchase_Order_Line_API.Get_Total_Incl_Tax_Curr(order_no,line_no,release_no) GrossAmtCurr,
+       Purchase_Order_Line_API.Get_Line_Total(order_no,line_no,release_no) NetAmtBase,
+       Purchase_Order_Line_Part_API.Get_Line_Total_Incl_Tax(order_no,line_no,release_no) GrossAmtBase,
+       DECODE(Source_Tax_Item_API.Multiple_Tax_Items_Exist(Site_API.Get_Company(Purchase_Order_API.Get_Contract(order_no)), 'PURCHASE_ORDER_LINE', order_no, line_no, release_no, '*', '*'), 'TRUE', 'TRUE', 'FALSE') MultipleTaxLines,
+       Purchase_Order_Invoice_API.Calc_Qty_Invoiced(order_no,line_no,release_no) InvoicedQty,
+       Purchase_Order_Invoice_API.Calc_Invoiced_Unit_Price(order_no,line_no,release_no) InvoicedPriceInvCurr,
+       Purchase_Order_Invoice_API.Calc_Mpi_Discount(order_no,line_no,release_no) InvoicedDiscount,
+       Purchase_Order_Invoice_API.Calc_Ivc_Additional_Cost(order_no,line_no,release_no) InvoicedAddCostNetCurr,
+       Purchase_Part_Supplier_API.Get_Orders_Price_Option_Db(purchase_site, part_no, vendor_no) SendOrderPrice,
+       Purchase_Order_Line_API.Get_Freeze_Flag_Db(",,06/28/24,,,purchase_order_line_all,,,PurchaseOrderLine,,"Kalyan - Enter service name: PurchaseOrderLinesHandling.svc
+Enter api : PurchaseOrderLineSet
+Total REST API Attribute count: 246 
+Total Select Query Column count:306 
+
+
+./csv_output/PurchaseOrderLineSet/PurchaseOrderLineSet_chunk_0.csv: 
+Matching Attribute count: 242 
+Non-matching Attribute count: 4
+
+
+Non-matching Attributes: ['DummyProjectId', 'S…",
+1,53,Inventory,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SupplierForPurchasePartsHandling.svc,v1,PurchasePartSupplierSet,IFS,,Completed in Internal Test,Shanka,2023-06-06,Ready to Start,,Y,Y,Completed,Completed,Not Started,,,,06/17/24,06/18/24,,PURCHASE_PART_SUPPLIER,150731,,,,,
+1,15,GL,IFS_BronzeAPI,main/ifsapplications/projection,PurchaseReceiptHistoryAnalysis.svc,v1,PurchaseReceipts,IFS,,Completed in Internal Test,Shanka,2024-05-21,Removed,,,N,,,,,,,,,,,,,PurchaseReceipt,,,
+2,44,PurchaseRequisition,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PurchaseRequisitionLinesHandling.svc,v1,PurchaseReqLineSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,N,Not Available,Not Started,Not Started,,,,06/28/24,,,purchase_req_line_all,599841,,PurchaseReqLine,,,
+3,42,PurchaseRequisition,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PurchaseRequisitionHandling.svc,v1,PurchaseRequisitionSet,IFS,,Completed in Internal Test,Shanka,,Not Ready,,,N,,,,,,,,,,,,,PurchaseRequisition,,,
+3,43,PurchaseRequisition,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PurchaseRequisitionsHandling.svc,v1,PurchaseRequisitionSet,IFS,,Completed in Internal Test,Shanka,,Not Ready,,,,,,,,,,,,,,,,PurchaseRequisition,,,
+1,56,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,FinancialProjectsHandling.svc,v1,Reference_AccountingProject,IFS,,Completed in Internal Test,Shanka,2023-06-06,Not Required,,,N,,,,,,,,,,,,,,,,
+3,9,Department,IFS_BronzeAPI,main/ifsapplications/projection,CodePartValuesHandling.svc,v1,Reference_CodeB,IFS,,Completed in Internal Test,Shanka,2024-05-23,Not Required,,,N,No Data,,,,"select * from CODE_B t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,CODE_B,,,,,,
+1,12,Division,IFS_BronzeAPI,main/ifsapplications/projection,CodePartValuesHandling.svc,v1,Reference_CodeD,IFS,,Completed in Internal Test,Shanka,2024-05-21,Not Required,,,N,No Data,,,,"select * from CODE_D t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,CODE_D,,,CodeD,,,
+1,55,CustomerOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerOrderHandling.svc,v1,Reference_CustomerOrderHistoryQuery,IFS,,Completed in Internal Test,Shanka,2023-06-06,Ready to Start,,Y,Y,Completed,Completed,Not Started,,,Production,06/17/24,06/18/24,,Customer_Order_History,2956297,,,,Sahan Dharmasiri - COMPLETED,
+2,32,Customer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerOrderLinesHandling.svc,v1,Reference_CustomerShipInfoAddress,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,Not Required,,,,,,,,CustomerInfoAddress,,,
+3,38,Customer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CustomerHandling.svc,v1,Reference_CustOrdCustomer,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,Not Required,,,,,,,,CustOrdCustomer,CUST_ORD_CUSTOMER_ENT,,
+1,14,GL,IFS_BronzeAPI,main/ifsapplications/projection,GLVoucherDetailsAnalysis.svc,v1,Reference_GenLedVoucherRow,IFS,,Completed in Internal Test,Shanka,2024-05-21,Removed,,,N,,,,,"select t.* ,
+Voucher_Note_API.Check_Note_Exist(COMPANY,ACCOUNTING_YEAR,VOUCHER_TYPE,VOUCHER_NO) Notes,
+GEN_LED_VOUCHER_API.Get_Reference_Company__(COMPANY,VOUCHER_TYPE,ACCOUNTING_YEAR,VOUCHER_NO) Company2
+from gen_led_voucher2 t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,gen_led_voucher_row_union_qry,,,GenLedVoucherRow,,,
+1,,,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,Inventory.svc,Reference_InventoryValuePart,Reference_InventoryValuePart,,,,,,Ready to Start,,Y,N,Not Available,Completed,Not Started,,,,06/21/24,06/24/24,,,,,,,,
+1,50,Receivables,IFS_BronzeAPI,main/ifsapplications/projection,CustomerPaymentsPerInvoicePrePaymentAnalysis.svc,v1,Reference_LedgerTransactionCu,IFS,,Completed. Created a quick report.,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.* ,
+       DECODE(is_new_ledger_item, 'FALSE', paid_amount - NVL(boe_discount_fee,0), paid_amount) PaidAmount       
+from LEDGER_TRANSACTION_CU_QRY t
+where pay_date between to_date('01-11-2018', 'dd-mm-yyyy') and to_date('31-03-2024', 'dd-mm-yyyy')",,06/17/24,06/18/24,,ledger_transaction_cu_qry,,,,,shanka@nayotech.com - @kalyan@nayotech.com Quick report is created. Attached to NSD ticket 3338,
+1,51,Payables,IFS_BronzeAPI,main/ifsapplications/projection,SupplierPaymentsPerInvoicePrePaymentAnalysis.svc,v1,Reference_LedgerTransactionSu,IFS,,Completed. Created a quick report.,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.*,
+       NVL(withheld_tax_curr_amount, 0) - NVL(withheld_reduct_curr_amount, 0) TaxWithheldInCurrentPayment           
+from ledger_transaction_su_qry t
+where pay_date between to_date('01-11-2018', 'dd-mm-yyyy') and to_date('31-03-2024', 'dd-mm-yyyy')",,06/17/24,06/18/24,,ledger_transaction_su_qry,,,,,shanka@nayotech.com - @kalyan@nayotech.com Quick report is created. Attached to NSD ticket 3338,
+2,,,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,PurchaseOrderLines.svc,Reference_PurchaseOrderLinePart,Reference_PurchaseOrderLinePart,,,,,,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/21/24,,,,,,,,,
+3,54,ShopOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ShopOrderHistoryHandling.svc,v1,Reference_ShopOrderHistory,IFS,,Completed in Internal Test,Shanka,2023-06-06,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/28/24,,,SHOP_ORDER_HISTORY,14469185,,,,,
+3,51,ShopOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ShopOrdersHandling.svc,v1,Reference_ShopOrderOperationLov,IFS,,OBJVERSION is not available in the view shop_order_operation_lov,Shanka,2023-06-06,Removed,,N,N,Not Available,Not Started,Not Started,,,,,,,shop_order_operation_lov,,,,,"Kalyan - Message from Sanjeev (CROWE)
+
+Hi Snakaa/Kalyan,
+
+ 
+
+You can skip below endpoints for Incremental endpoints list, we have switched to different endpoints to grab the same information.
+
+ 
+
+Users, Peoples and Reference_ShopOrderOperationLov
+
+ 
+
+ 
+
+Reference_ShopOrderOperationLov is not required for Historical extract.
+
+ 
+
+Regards
+
+Sanjeev Ku…",
+1,26,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ProjectMonitoringHandling.svc,v1,Reference_SummaryCostProject,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,,Production,06/17/24,06/18/24,,proj_con_det_sum_cost_project,36168,,,"No endpoint SummaryCostProject, but Reference_SummaryCostProject. Cannot publish the OBJVERSION as this view doesn't have and OBJKEY available. Hence create a report and use it's projection to fectch data. Fixed using Quick report",,
+2,39,Vendor,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SupplierHandling.svc,v1,Reference_SupplierPurchaseInformation,IFS,,Completed in Internal Test,Shanka,2023-06-06,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/28/24,,,SUPPLIER,5637,,,,,
+3,41,Buyer,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,RequisitionersHandling.svc,v1,Requisitioners,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,,,,Requisitioner,,,
+2,,,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,Product.svc,RoutingOperations,RoutingOperations,,,,,,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/21/24,,,,,,,,,
+2,37,SalesRep,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SalesmenHandling.svc,v1,Salesmen,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,,,,SalesPartSalesman,,,
+1,20,Product,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SalesPartsHandling.svc,v1,SalesPartSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select * from SALES_PART t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,06/17/24,06/18/24,,SALES_PART,,,SalesPart,,Sahan Dharmasiri - Line 55 is completed,
+2,29,SalesRep,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SalesRegionsHandling.svc,v1,SalesRegions,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,,,,SalesRegion,,,
+3,4,ShopOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ShopOrdersHandling.svc,v1,ShopOrds,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/28/24,,,SHOP_ORD,1279793,,ShopOrd,,,
+3,33,ShopOrderLines,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,ShopOrderCostsHandling.svc,v1,ShopOrdSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,N,N,Not Available,Not Started,Not Started,,,,06/28/24,,,SHOP_ORD,1279793,,ShopOrd,,,
+1,15,Site,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SitesHandling.svc,v1,SiteSet,IFS,,Completed in Internal Test,Shanka,,Removed,,Y,Y,Completed,Nayo adding attributes,Under Review,,"select t.*,
+SITE_DISCOM_INFO_API.Get_Document_Address_Id(CONTRACT, 'FALSE') DocumentAddress,
+SITE_INVENT_INFO_API.Get_Last_Actual_Cost_Calc(CONTRACT) LastPeriodicWADate,
+SITE_DISCOM_INFO_API.Get_Disp_Cond_Cust_Order_Db(CONTRACT) CustomerOrderReportsConditionCodeDisplay,
+SITE_DISCOM_INFO_API.Get_Disp_Cond_Purch_Order_Db(CONTRACT) PurchaseOrderReportsConditionCodeDisplay,
+SITE_MFGSTD_INFO_API.Get_So_Receipt_Background_Db(CONTRACT) DefaultSOReceiptinBackground,
+Cust_Ord_Customer_API.Get_Customer_No_From_Contract(CONTRACT) InternalCustomer,
+Supplier_API.Get_Vendor_No_From_Contract(CONTRACT) InternalSupplier,
+Site_Invent_Info_API.Get_Region_Code(CONTRACT) RegionCode,
+Site_Discom_Info_API.Get_Branch(CONTRACT) Branch
+from site t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,,,,SITE,,,Site,,"Kalyan - Hi Kalyan,
+
+ 
+
+We are using CountryCode for SiteSet Api and for Projects we are not using the missing columns.
+
+ 
+
+Regards
+
+Sanjeev",
+1,25,Projects,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SubProjectsHandling.svc,v1,SubProjects,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,,,,SubProject,,,
+1,27,Projects,IFS_BronzeAPI,main/ifsapplications/projection,ProjectMonitoringHandling.svc,v1,SummaryCostProject,IFS,,TBD,,,To be verified,,,,,,,,,,,,,,,,,"Endpoint not found, Crowe team is checking on this",,
+2,18,Vendor,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,SuppliersHandling.svc,v1,SupplierInfoGeneralSet,IFS,,Completed in Internal Test,Shanka,,Ready to Start,,Y,Y,Completed,Completed,Not Started,,"select t.*,
+       Personal_Data_Man_Util_API.Is_Valid_Consent_By_Keys('SUPPLIER', supplier_id, NULL, trunc(sysdate)) ValidDataProcessingPurpose
+from Supplier_Info_General t
+where to_date(substr(t.OBJVERSION, 0, 8), 'YYYYMMDD') between to_date('20181101', 'YYYYMMDD') AND  to_date('20240331', 'YYYYMMDD');",,06/28/24,,,SUPPLIER_INFO_GENERAL,,,SupplierInfoGeneral,,Sahan Dharmasiri - 62 IS COMPLETED,
+1,10,TimeCard,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,CasualManagerClockingsHandling.svc,v1,TimeClockings,IFS,,Completed in Internal Test,Shanka,,Not Required,,,N,,,,,,,,,,,,,TimrepTransaction,,,
+1,52,Employee,IFS_BronzeAPI,https:/<<APIENV>>.sjeifs.com/main/ifsapplications/projection,UserHandling.svc,v1,Users,IFS,,OBJVERSION is not a date,Shanka,2023-06-06,Not Required,,,N,,,,,,,,,,,,,,,,

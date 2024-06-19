@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# project folders created dynamically
+csv_output/
+csv_data/
+
+# virtual environment
+nt_venv/
+
 # C extensions
 *.so
 
