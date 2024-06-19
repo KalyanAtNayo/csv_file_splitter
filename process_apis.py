@@ -15,16 +15,23 @@ def process_api(apihandler: str, endpoint: str):
         print(f"API CSV Data File: {api_csv_data_file} does not exist")
         return
 
+    api_chunk_file_path = f"./csv_output/{
+        endpoint}/{endpoint}_chunk_0.csv"
+    if os.path.exists(api_chunk_file_path):
+        print(f"API chunk file: {api_chunk_file_path} exists")
+        return
+
     text_match = "rows selected."
     # check if there is a matching text entry contains in the last row of the csv file
-    with open(api_csv_data_file_with_path, 'r') as f:
+    with open(api_csv_data_file_with_path,  'r', encoding='mac_roman') as f:
         reader = csv.reader(f)
         data = list(reader)
         last_row = data[-1]
         # concatenate all the entries of the string array last_row
         last_row = ''.join(last_row)
 
-        print(f"Last row of {api_csv_data_file_with_path} is {last_row}")
+        print(f"Checking if Last row of {
+              api_csv_data_file_with_path} file: {last_row}  for validity")
         if text_match in last_row:
             print(f"\n\n!!Invalid CSV data file: API {apihandler}:{
                 endpoint} has invalid data: {last_row} in the last row")
@@ -36,11 +43,6 @@ def process_api(apihandler: str, endpoint: str):
     if not os.path.exists("./csv_data"):
         os.makedirs("./csv_data")
 
-    api_chunk_file_path = f"./csv_output/{
-        endpoint}/{endpoint}_chunk_0.csv"
-    if os.path.exists(api_chunk_file_path):
-        print(f"API chunk file: {api_chunk_file_path} exists")
-        return
     # print(f"API CSV Data File: {api_csv_data_file}")
     # check if file exists in csv_data folder
     if os.path.exists(api_csv_data_file_with_path):
