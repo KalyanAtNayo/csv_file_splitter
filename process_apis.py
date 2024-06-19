@@ -27,7 +27,9 @@ def process_api(apihandler: str, endpoint: str):
         print(f"Last row of {api_csv_data_file_with_path} is {last_row}")
         if text_match in last_row:
             print(f"\n\n!!Invalid CSV data file: API {apihandler}:{
-                endpoint} has row data: {last_row}\n\n")
+                endpoint} has invalid data: {last_row} in the last row")
+            print(
+                "It is recommended to open the csv file, and remove the last line and re-process\n\n")
             return
 
     # check if path exisits
