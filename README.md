@@ -10,3 +10,6 @@ source nt_venv/bin/activate
 # install all modules
 pip install -r requirements.txt
 
+# using the scripts:
+python process_apis.py
+
