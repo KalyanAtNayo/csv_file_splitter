@@ -21,23 +21,23 @@ def process_api(apihandler: str, endpoint: str):
         print(f"API chunk file: {api_chunk_file_path} exists")
         return
 
-    text_match = "rows selected."
-    # check if there is a matching text entry contains in the last row of the csv file
-    with open(api_csv_data_file_with_path,  'r', encoding='mac_roman') as f:
-        reader = csv.reader(f)
-        data = list(reader)
-        last_row = data[-1]
-        # concatenate all the entries of the string array last_row
-        last_row = ''.join(last_row)
+    # text_match = "rows selected."
+    # # check if there is a matching text entry contains in the last row of the csv file
+    # with open(api_csv_data_file_with_path,  'r', encoding='mac_roman') as f:
+    #     reader = csv.reader(f)
+    #     data = list(reader)
+    #     last_row = data[-1]
+    #     # concatenate all the entries of the string array last_row
+    #     last_row = ''.join(last_row)
 
-        print(f"Checking if Last row of {
-              api_csv_data_file_with_path} file: {last_row}  for validity")
-        if text_match in last_row:
-            print(f"\n\n!!Invalid CSV data file: API {apihandler}:{
-                endpoint} has invalid data: {last_row} in the last row")
-            print(
-                "It is recommended to open the csv file, and remove the last line and re-process\n\n")
-            return
+    #     print(f"Checking if Last row of {
+    #           api_csv_data_file_with_path} file: {last_row}  for validity")
+    #     if text_match in last_row:
+    #         print(f"\n\n!!Invalid CSV data file: API {apihandler}:{
+    #             endpoint} has invalid data: {last_row} in the last row")
+    #         print(
+    #             "It is recommended to open the csv file, and remove the last line and re-process\n\n")
+    #         return
 
     # check if path exisits
     if not os.path.exists("./csv_data"):
