@@ -12,6 +12,9 @@ pip install -r requirements.txt
 
 # .env set up
 create a .env file with the following keys
+
+```
+
 TOKEN_URL=
 CLIENT_ID=
 CLIENT_SECRET=
@@ -21,6 +24,7 @@ SUFFIX='?$skip=0&$top=1&odata-debug=json'
 AUDIENCE='nwsapp03test'
 ISSUER='https://nwstest.nayotech.com/auth/realms/nwsapp03test'
 
+```
 You can get the token and jwks urls from IFS_BASE_URL/.well-known/openid-configuration
 e.g https://nwstest.nayotech.com/.well-known/openid-configuration
 
