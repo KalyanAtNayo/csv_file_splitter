@@ -29,8 +29,33 @@ issuer = os.getenv(
 suffix = os.getenv(
     'SUFFIX')
 
+# Custom field conversion
+
+
+def convert_cf_snake_case_to_pascal(name: str) -> str:
+    if "$" not in name:
+        # throw exception of invalid use of method
+        raise ValueError("Invalid use of method")
+
+    # split the string by underscore
+    words = name.split("_")
+    # capitalize the first letter of each word
+    words = [word.capitalize() for word in words]
+
+    delimiter = "_"
+
+    # join the words
+    name = delimiter.join(words)
+    if "$" in name:
+        name = name.replace("$", "")
+    return name
+
 
 def snake_to_pascal(snake_str, api_keys: Dict[str, str]):
+    print(f"Converting {snake_str} to PascalCase...")
+    # some custom fields have the format of e.g. CF$_REASON_FOR_LATE and they need to be converted to Cf_Reason_For_Late
+    if "$_" in snake_str:
+        return convert_cf_snake_case_to_pascal(snake_str)
     components = snake_str.lower().split('_')
     pascalText = ''.join(x.title() for x in components)
     _pascalTextUpper = pascalText.upper()
@@ -50,9 +75,12 @@ def build_api_endpoint(service: str, api_endpoint: str) -> str:
 def split_csv_file(api_service: str, api: str, input_file: str, max_file_size_mb: int, output_prefix: str):
     try:
         df = pd.read_csv(input_file, encoding='mac_roman',
-                         low_memory=False, dtype=str)
+                         dtype=str)
         api_endpoint = build_api_endpoint(api_service, api)
         api_keys = fetch_api_keys(api=api, api_endpoint=api_endpoint)
+
+        cols = df.columns
+        print(f"Columns in the CSV file: {cols}")
 
         # Convert column names to PascalCase
         df.columns = [snake_to_pascal(col, api_keys) for col in df.columns]
@@ -61,7 +89,7 @@ def split_csv_file(api_service: str, api: str, input_file: str, max_file_size_mb
         max_file_size_bytes = max_file_size_mb * 1024 * 1024
         # Adjust chunk size if necessary
         df_iter = pd.read_csv(input_file, chunksize=10000,
-                              encoding='mac_roman', low_memory=False, dtype=str)
+                              encoding='mac_roman', dtype=str)
 
         # # Convert column names to PascalCase
         # df_iter.columns = [snake_to_pascal(col) for col in df_iter.columns]
