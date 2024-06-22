@@ -52,7 +52,6 @@ def convert_cf_snake_case_to_pascal(name: str) -> str:
 
 
 def snake_to_pascal(snake_str, api_keys: Dict[str, str]):
-    print(f"Converting {snake_str} to PascalCase...")
     # some custom fields have the format of e.g. CF$_REASON_FOR_LATE and they need to be converted to Cf_Reason_For_Late
     if "$_" in snake_str:
         return convert_cf_snake_case_to_pascal(snake_str)
@@ -79,8 +78,8 @@ def split_csv_file(api_service: str, api: str, input_file: str, max_file_size_mb
         api_endpoint = build_api_endpoint(api_service, api)
         api_keys = fetch_api_keys(api=api, api_endpoint=api_endpoint)
 
-        cols = df.columns
-        print(f"Columns in the CSV file: {cols}")
+        # cols = df.columns
+        # print(f"Columns in the CSV file: {cols}")
 
         # Convert column names to PascalCase
         df.columns = [snake_to_pascal(col, api_keys) for col in df.columns]
