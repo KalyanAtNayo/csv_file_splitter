@@ -129,52 +129,12 @@ def process_api_endpoint(api: str, api_endpoint: str):
     # historical data load
     historical_data_file = f"./csv_output/{
         api}/{api}_chunk_0.csv"
-    # json_body_path = f"./json_output/{
-    #     api_endpoint}"
-    # json_body_file = f"{json_body_path}/{api_endpoint}_body.json"
-    # json_body = None
     # load csv file and fetch the header
     try:
         df = pd.read_csv(historical_data_file,
                          encoding='mac_roman', low_memory=False, dtype=str)
     except Exception as e:
         print(e)
-
-    # check if json_body_file exists
-    # if os.path.exists(json_body_file):
-    #     with open(json_body_file, 'r') as f:
-    #         json_body = json.load(f)
-
-    # if json_body == None:
-    #     print(f'Processing endpoint: {endpoint}')
-    #     # process the api endpoint
-    #     data = process_api(endpoint=endpoint, retry=0)
-    #     response = data['response']
-    #     body = response['body']
-    #     json_body = json.loads(body)
-
-    #     # if json_body_path does not exist create it
-    #     if not os.path.exists(json_body_path):
-    #         os.makedirs(json_body_path)
-
-    #     # write the json_body to a file named after the api_endpoint
-    #     with open(json_body_file, 'w') as f:
-    #         json.dump(json_body, f)
-
-    # # Get all keys
-    # all_keys = fetch_keys(json_body)
-
-    # # sort all_keys
-    # all_keys = sorted(all_keys)
-
-    # fnd_keys = ['keyref', 'luname', 'value',
-    #             '@odata.context', '@odata.etag', 'Cf_C_Objversion']
-    # rest_api_attributes = []
-    # # Print all keys
-    # for key in all_keys:
-    #     if key in fnd_keys:
-    #         continue
-    #     rest_api_attributes.append(key)
 
     # from the panda dataframe, fetch the columns
     columns = df.columns
