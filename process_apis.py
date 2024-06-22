@@ -14,11 +14,14 @@ def process_api(apihandler: str, endpoint: str):
     if not os.path.exists(api_csv_data_file_with_path):
         print(f"API CSV Data File: {api_csv_data_file} does not exist")
         return
-
-    api_chunk_file_path = f"./csv_output/{
-        endpoint}/{endpoint}_chunk_0.csv"
-    if os.path.exists(api_chunk_file_path):
-        print(f"API chunk file: {api_chunk_file_path} exists")
+    api_output_file_path = f"./csv_output/{
+        endpoint}/"
+    api_chunk_file_path = f"{api_output_file_path}{endpoint}_chunk_0.csv"    
+    if os.path.exists(api_output_file_path):
+        #check number of csv files in given directory path
+        chunk_files = os.listdir(f"./csv_output/{endpoint}")
+        num_chunk_files = len(chunk_files)
+        print(f"API already processed. {num_chunk_files} chunk file(s) found in: {api_output_file_path}")
         return
 
     # check if path exisits
