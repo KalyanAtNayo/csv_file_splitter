@@ -21,24 +21,6 @@ def process_api(apihandler: str, endpoint: str):
         print(f"API chunk file: {api_chunk_file_path} exists")
         return
 
-    # text_match = "rows selected."
-    # # check if there is a matching text entry contains in the last row of the csv file
-    # with open(api_csv_data_file_with_path,  'r', encoding='mac_roman') as f:
-    #     reader = csv.reader(f)
-    #     data = list(reader)
-    #     last_row = data[-1]
-    #     # concatenate all the entries of the string array last_row
-    #     last_row = ''.join(last_row)
-
-    #     print(f"Checking if Last row of {
-    #           api_csv_data_file_with_path} file: {last_row}  for validity")
-    #     if text_match in last_row:
-    #         print(f"\n\n!!Invalid CSV data file: API {apihandler}:{
-    #             endpoint} has invalid data: {last_row} in the last row")
-    #         print(
-    #             "It is recommended to open the csv file, and remove the last line and re-process\n\n")
-    #         return
-
     # check if path exisits
     if not os.path.exists("./csv_data"):
         os.makedirs("./csv_data")
@@ -61,25 +43,38 @@ def process_api(apihandler: str, endpoint: str):
 
 
 if __name__ == "__main__":
-
+    input_file_name = input(
+        "Enter the name of the input file (e.g. SJE-EDW-APIS.csv): ") or 'SJE-EDW-APIS.csv'
+    
+    #check if file is in path
+    if not os.path.exists(input_file_name):
+        print(f"File {input_file_name} does not exist")
+        exit(1)
+        
     # load csv file SJE-EDW-APIS.csv
-    with open('SJE-EDW-APIS.csv', 'r') as f:
+    with open(input_file_name, 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
-        print(header)
+        
         # get index of a column name
         apihandler_column_name = 'APIHandler'
         endpoint_column_name = 'APIEndPoint'
         historic_load_column_name = 'Status (Historical Load)'
-        endpoint_header_index = header.index(endpoint_column_name)
-        apihandler_header_index = header.index(apihandler_column_name)
-        historic_load_column_index = header.index(
-            historic_load_column_name)
-        print(f"Index of {apihandler_column_name} is {
-              apihandler_header_index}")
-        print(f"Index of {endpoint_column_name} is {endpoint_header_index}")
-        print(f"Index of {historic_load_column_name} is {
-              historic_load_column_index}")
+        try:
+            endpoint_header_index = header.index(endpoint_column_name)
+            apihandler_header_index = header.index(apihandler_column_name)
+            historic_load_column_index = header.index(
+                historic_load_column_name)
+            print(f"Index of {apihandler_column_name} is {
+                apihandler_header_index}")
+            print(f"Index of {endpoint_column_name} is {endpoint_header_index}")
+            print(f"Index of {historic_load_column_name} is {
+                historic_load_column_index}")
+        except Exception:
+            print("One or more columns do not match expected names")
+            print(f"Expected column names \n {apihandler_column_name}, {
+                endpoint_column_name}, {historic_load_column_name}")
+            exit(1)
 
         # read data rows
         data = list(reader)
@@ -91,10 +86,15 @@ if __name__ == "__main__":
             row for row in data if row[historic_load_column_index] == 'Ready to Start']
         print(f"Found {len(historic_load_entries)
                        } entries with Historical Load as Ready to Start")
+        
+        #if there are no entries return 
+        if len(historic_load_entries) == 0:
+            print("No entries found with Historical Load as Ready to Start")
+            exit()
 
         # log the time
         start = datetime.now()
-        print("Processing started at: ", start)
+        print(f"Processing started at: {start}\n")
 
         # loop through each row
         for row in historic_load_entries:
