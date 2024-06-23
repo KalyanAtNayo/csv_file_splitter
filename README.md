@@ -44,6 +44,8 @@ ISSUER='https://nwstest.nayotech.com/auth/realms/nwsapp03test'
 python process_apis.py
 ```
 
+![Sample ouput](https://github.com/KalyanAtNayo/csv_file_splitter/blob/main/process_apis_output_log.png)
+
 2. Process one API
    > grab the APIService and APIEndpoint from one of the spreadsheets
 
