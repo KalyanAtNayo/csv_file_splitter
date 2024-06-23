@@ -37,7 +37,7 @@ ISSUER='https://nwstest.nayotech.com/auth/realms/nwsapp03test'
 
 # using the scripts:
 
-All the scripts are designed to be repeatable.
+All scripts are designed to be repeatable.
 
 1. Process all APIs
    > make sure the input csv file has all the neccessary entries to be processed
@@ -45,6 +45,7 @@ All the scripts are designed to be repeatable.
 ```
 python process_apis.py
 ```
+
 Sample Output:
 ![Sample ouput](https://github.com/KalyanAtNayo/csv_file_splitter/blob/main/process_apis_output_log.png)
 
@@ -61,6 +62,24 @@ python split_csv_file.py
 ```
 python validate_historical_load_structure.py
 ```
+
+4. Fetch Access token
+   > This script is responsible for fetching an access token from IFS IAM using the provisioned client credential authentication flow.
+
+```
+python fetch_token.py
+```
+
+Sample output
+
+```
+Verifying token: https://<ISSUER_URL>/protocol/openid-connect/certs
+Token has expired
+SavedToken is not valid.. fetching new token
+Access Token: eyJhbGciOiJSUzI1NiI....
+```
+
+> The access token can be introspected using https://jwt.io
 
 # Documentation & Project Management
 
