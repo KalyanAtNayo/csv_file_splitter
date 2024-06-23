@@ -60,7 +60,7 @@ python split_csv_file.py
 python validate_historical_load_structure.py
 ```
 
-# access to documentation
+# Documentation & Project Management
 
 IFS Bronze APIs for both Incremental and Historical loads are maintained here:
 [Sharepoint Link](https://nayotechnologies.sharepoint.com/:x:/s/SJE/EcQcqg7lUWlDsR8MwItY8mUBWTnjttvaD8OTMjsiAZn5bA?e=8YnpqU)
