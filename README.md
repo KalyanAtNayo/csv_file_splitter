@@ -62,7 +62,7 @@ python validate_historical_load_structure.py
 
 IFS Bronze APIs for both Incremental and Historical loads are maintained here:
 [Sharepoint Link](https://nayotechnologies.sharepoint.com/:x:/s/SJE/EcQcqg7lUWlDsR8MwItY8mUBWTnjttvaD8OTMjsiAZn5bA?e=8YnpqU)
-This sharepoint document is for internal use.
+This sharepoint document is for NAYO internal use.
 
 Historical Loads:
 
