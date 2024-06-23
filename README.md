@@ -37,6 +37,8 @@ ISSUER='https://nwstest.nayotech.com/auth/realms/nwsapp03test'
 
 # using the scripts:
 
+All the scripts are designed to be repeatable.
+
 1. Process all APIs
    > make sure the input csv file has all the neccessary entries to be processed
 
