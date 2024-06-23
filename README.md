@@ -37,8 +37,25 @@ ISSUER='https://nwstest.nayotech.com/auth/realms/nwsapp03test'
 
 # using the scripts:
 
+1. Process all APIs
+   > make sure the input csv file has all the neccessary entries to be processed
+
 ```
 python process_apis.py
+```
+
+2. Process one API
+   > grab the APIService and APIEndpoint from one of the spreadsheets
+
+```
+python split_csv_file.py
+```
+
+3. Validate JSON & CSV
+   > grab the APIService and APIEndpoint from one of the spreadsheets
+
+```
+python validate_historical_load_structure.py
 ```
 
 # access to documentation
