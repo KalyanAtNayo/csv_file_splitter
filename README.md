@@ -45,9 +45,18 @@ python process_apis.py
 
 IFS Bronze APIs for both Incremental and Historical loads are maintained here:
 [Sharepoint Link](https://nayotechnologies.sharepoint.com/:x:/s/SJE/EcQcqg7lUWlDsR8MwItY8mUBWTnjttvaD8OTMjsiAZn5bA?e=8YnpqU)
+This sharepoint document is for internal use.
 
 Historical Loads:
 
-> The entries in that spreadsheet can be filtered by Status (Historical Load) column for the value "Ready to Start"
+- The entries in that spreadsheet can be filtered by Status (Historical Load) column for the value "Ready to Start"
+- The SourceSystem column has a link to the odata-json debug endpoint
+- APIHandler and APIEndpoint are used to process all the apis
+- The column "Select query" has the SQL query to extract the data for the given date range
 
-> The SourceSystem column has a link to the odata-json debug endpoint
+For external parties we use Smartsheets, where we allow customers and 3rd party vendors access.
+
+- [Master list](https://app.smartsheet.com/sheets/PHQg37j8WhrRqhJ5Vm2p7XcQcr92HH4C5xM49Hx1?view=grid)
+- [Collaborate Column Validations](https://app.smartsheet.com/sheets/jQpPmpPV6PwqG2MMwFcWj43vMmPWVVW729Qh86V1?filterId=3195781860249476&view=grid)
+- [Daily Report](https://app.smartsheet.com/reports/Jr2mjxVv8Fm99j3wJqhJC63RG7JmrGccMjQ6Xv61?view=grid)
+- [Status Dashboard](https://app.smartsheet.com/b/publish?EQBCT=daf22bfcb16345f091885807f7652cee)
