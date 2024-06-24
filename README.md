@@ -8,7 +8,14 @@ python -m venv nt_venv
 
 # activate python environment
 
-source nt_venv/bin/activate
+> For Mac OS:
+
+> source nt_venv/bin/activate
+
+> For Windows OS:
+
+> run nt_venv/bin/activate.bat
+
 
 # install all modules
 
