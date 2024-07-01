@@ -37,8 +37,12 @@ def process_api(apihandler: str, endpoint: str):
     api_bak_csv_data_file_with_path = f"./csv_data/bak_{api_csv_data_file}"
     clean_csv(api_csv_data_file_with_path, api_clean_csv_data_file_with_path)
 
+    print(f"Renaming {api_csv_data_file_with_path} to {
+          api_bak_csv_data_file_with_path}")
     # rename file of input file to bak file name
     os.rename(api_csv_data_file_with_path, api_bak_csv_data_file_with_path)
+    print(f"Renaming {api_clean_csv_data_file_with_path} to {
+          api_csv_data_file_with_path}")
     # rename file of clean file name to input file
     os.rename(api_clean_csv_data_file_with_path, api_csv_data_file_with_path)
 
