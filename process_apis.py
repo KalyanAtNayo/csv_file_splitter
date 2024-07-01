@@ -4,6 +4,25 @@ from datetime import datetime
 from split_csv_file import build_api_endpoint, process_historical_data
 from validate_historical_load_structure import process_api_endpoint
 import os
+import pandas as pd
+
+
+def clean_csv(input_csv_path, output_csv_path):
+    with open(input_csv_path, 'r', newline='', encoding='utf-8') as infile, \
+            open(output_csv_path, 'w', newline='', encoding='utf-8') as outfile:
+
+        # Create a CSV reader and writer
+        reader = csv.reader(infile)
+        writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
+
+        for row in reader:
+            # Clean each cell in the row by replacing newline characters with a space
+            cleaned_row = [cell.replace('\n', ' ').replace(
+                '\r', ' ') for cell in row]
+            # Write the cleaned row to the output file
+            writer.writerow(cleaned_row)
+
+    print(f"Cleaned CSV file saved to {output_csv_path}")
 
 
 def process_api(apihandler: str, endpoint: str):
@@ -14,14 +33,24 @@ def process_api(apihandler: str, endpoint: str):
     if not os.path.exists(api_csv_data_file_with_path):
         print(f"API CSV Data File: {api_csv_data_file} does not exist")
         return
+    api_clean_csv_data_file_with_path = f"./csv_data/clean_{api_csv_data_file}"
+    api_bak_csv_data_file_with_path = f"./csv_data/bak_{api_csv_data_file}"
+    clean_csv(api_csv_data_file_with_path, api_clean_csv_data_file_with_path)
+
+    # rename file of input file to bak file name
+    os.rename(api_csv_data_file_with_path, api_bak_csv_data_file_with_path)
+    # rename file of clean file name to input file
+    os.rename(api_clean_csv_data_file_with_path, api_csv_data_file_with_path)
+
     api_output_file_path = f"./csv_output/{
         endpoint}/"
-    api_chunk_file_path = f"{api_output_file_path}{endpoint}_chunk_0.csv"    
+    api_chunk_file_path = f"{api_output_file_path}{endpoint}_chunk_0.csv"
     if os.path.exists(api_output_file_path):
-        #check number of csv files in given directory path
+        # check number of csv files in given directory path
         chunk_files = os.listdir(f"./csv_output/{endpoint}")
         num_chunk_files = len(chunk_files)
-        print(f"API already processed. {num_chunk_files} chunk file(s) found in: {api_output_file_path}")
+        print(f"API already processed. {
+              num_chunk_files} chunk file(s) found in: {api_output_file_path}")
         return
 
     # check if path exisits
@@ -48,17 +77,17 @@ def process_api(apihandler: str, endpoint: str):
 if __name__ == "__main__":
     input_file_name = input(
         "Enter the name of the input file (e.g. SJE-EDW-APIS.csv): ") or 'SJE-EDW-APIS.csv'
-    
-    #check if file is in path
+
+    # check if file is in path
     if not os.path.exists(input_file_name):
         print(f"File {input_file_name} does not exist")
         exit(1)
-        
+
     # load csv file SJE-EDW-APIS.csv
     with open(input_file_name, 'r') as f:
         reader = csv.reader(f)
         header = next(reader)
-        
+
         # get index of a column name
         apihandler_column_name = 'APIHandler'
         endpoint_column_name = 'APIEndPoint'
@@ -70,7 +99,8 @@ if __name__ == "__main__":
                 historic_load_column_name)
             print(f"Index of {apihandler_column_name} is {
                 apihandler_header_index}")
-            print(f"Index of {endpoint_column_name} is {endpoint_header_index}")
+            print(f"Index of {endpoint_column_name} is {
+                  endpoint_header_index}")
             print(f"Index of {historic_load_column_name} is {
                 historic_load_column_index}")
         except Exception:
@@ -89,8 +119,8 @@ if __name__ == "__main__":
             row for row in data if row[historic_load_column_index] == 'Ready to Start']
         print(f"Found {len(historic_load_entries)
                        } entries with Historical Load as Ready to Start")
-        
-        #if there are no entries return 
+
+        # if there are no entries return
         if len(historic_load_entries) == 0:
             print("No entries found with Historical Load as Ready to Start")
             exit()
