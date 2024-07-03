@@ -244,7 +244,9 @@
             "WeightUom": "lb",
             "WorkOrderNo": null,
             "keyref": "LINE_NO=1^ORDER_NO=37263^RELEASE_NO=1^",
-            "luname": "PurchaseOrderLinePart"
+            "luname": "PurchaseOrderLinePart",
+            "Cf_Location_No":"VLM",
+            "Cf_Purchase_Ppv_Reason":null
         }
     ]
 }

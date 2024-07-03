@@ -8,19 +8,29 @@ import pandas as pd
 
 
 def clean_csv(input_csv_path, output_csv_path):
-    with open(input_csv_path, 'r', newline='', encoding='utf-8') as infile, \
-            open(output_csv_path, 'w', newline='', encoding='utf-8') as outfile:
+    encodings = ['utf-8', 'gbk', 'latin-1', 'mac_roman']
+    
+    for encoding in encodings:
+        try:
+            with open(input_csv_path, 'r', newline='', encoding=encoding) as infile, \
+                    open(output_csv_path, 'w', newline='', encoding='utf-8') as outfile:
 
-        # Create a CSV reader and writer
-        reader = csv.reader(infile)
-        writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
+                # Create a CSV reader and writer
+                reader = csv.reader(infile)
+                writer = csv.writer(outfile, quoting=csv.QUOTE_ALL)
 
-        for row in reader:
-            # Clean each cell in the row by replacing newline characters with a space
-            cleaned_row = [cell.replace('\n', ' ').replace(
-                '\r', ' ') for cell in row]
-            # Write the cleaned row to the output file
-            writer.writerow(cleaned_row)
+                for row in reader:
+                    # Clean each cell in the row by replacing newline characters with a space
+                    cleaned_row = [cell.replace('\n', ' ').replace('\r', ' ') for cell in row]
+                    # Write the cleaned row to the output file
+                    writer.writerow(cleaned_row)
+                
+                # If we successfully read and wrote the file, break the loop
+                break
+        except UnicodeDecodeError:
+            continue
+    else:
+        raise ValueError("Unable to decode the file with available encodings")
 
     print(f"Cleaned CSV file saved to {output_csv_path}")
 
@@ -35,16 +45,18 @@ def process_api(apihandler: str, endpoint: str):
         return
     api_clean_csv_data_file_with_path = f"./csv_data/clean_{api_csv_data_file}"
     api_bak_csv_data_file_with_path = f"./csv_data/bak_{api_csv_data_file}"
-    clean_csv(api_csv_data_file_with_path, api_clean_csv_data_file_with_path)
+    
+    if not os.path.exists(api_clean_csv_data_file_with_path):
+        clean_csv(api_csv_data_file_with_path, api_clean_csv_data_file_with_path)
 
-    print(f"Renaming {api_csv_data_file_with_path} to {
-          api_bak_csv_data_file_with_path}")
-    # rename file of input file to bak file name
-    os.rename(api_csv_data_file_with_path, api_bak_csv_data_file_with_path)
-    print(f"Renaming {api_clean_csv_data_file_with_path} to {
-          api_csv_data_file_with_path}")
-    # rename file of clean file name to input file
-    os.rename(api_clean_csv_data_file_with_path, api_csv_data_file_with_path)
+        print(f"Renaming {api_csv_data_file_with_path} to {
+            api_bak_csv_data_file_with_path}")
+        # rename file of input file to bak file name
+        os.rename(api_csv_data_file_with_path, api_bak_csv_data_file_with_path)
+        print(f"Renaming {api_clean_csv_data_file_with_path} to {
+            api_csv_data_file_with_path}")
+        # rename file of clean file name to input file
+        os.rename(api_clean_csv_data_file_with_path, api_csv_data_file_with_path)
 
     api_output_file_path = f"./csv_output/{
         endpoint}/"
